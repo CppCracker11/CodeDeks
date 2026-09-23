@@ -1,0 +1,65 @@
+from .base import Adp
+from .common import kb, ms, key, req, med
+
+class Lin(Adp):
+    def __init__(self):
+        req()
+        self.mou = ms.Controller()
+        self.key = kb.Controller()
+
+    def mov(self, dx, dy):
+        self.mou.move(dx, dy)
+    # Glossary:
+    # mov = mouse move
+    # mou = mouse controller
+
+    def clk(self, btn):
+        self.mou.click(getattr(ms.Button, btn), 1)
+    # Glossary:
+    # clk = click
+    # btn = button
+
+    def dbl(self):
+        self.mou.click(ms.Button.left, 2)
+    # Glossary:
+    # dbl = double click
+
+    def scr(self, dx, dy):
+        self.mou.scroll(dx, dy)
+    # Glossary:
+    # scr = scroll
+
+    def prs(self, val):
+        self.key.press(key(val))
+    # Glossary:
+    # prs = press
+    # val = key value
+
+    def rel(self, val):
+        self.key.release(key(val))
+    # Glossary:
+    # rel = release
+
+    def cmb(self, ks):
+        ps = [key(x) for x in ks]
+        try:
+            for x in ps: self.key.press(x)
+        finally:
+            for x in reversed(ps): self.key.release(x)
+    # Glossary:
+    # cmb = combination
+    # ks = keys
+    # ps = translated keys
+
+    def med(self, act):
+        x = med()[act]
+        self.key.press(x); self.key.release(x)
+    # Glossary:
+    # med = media control
+    # act = action
+    # x = media key
+
+    def pre(self, act):
+        self.prs("RIGHT" if act == "next" else "LEFT")
+    # Glossary:
+    # pre = presentation control
